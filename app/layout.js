@@ -41,6 +41,12 @@ export const metadata = {
     address: false,
     telephone: false,
   },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Astro Booking',
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

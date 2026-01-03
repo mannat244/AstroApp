@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-
+import { InstallPrompt } from "@/components/install-prompt";
 import { useEffect, useState } from "react";
 
 import { ServiceCard } from "@/components/service-card";
@@ -136,6 +136,7 @@ export default function DashboardPage() {
                     />
                 </div>
             </section>
+            <InstallPrompt />
         </main>
     );
 }

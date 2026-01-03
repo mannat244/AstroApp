@@ -3549,23 +3549,13 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js": {
-      "bytes": 7968,
-      "imports": [],
-      "format": "cjs"
-    },
     ".open-next/server-functions/default/.next/server/app/login/page_client-reference-manifest.js": {
       "bytes": 7917,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/app/(protected)/gemstones/page_client-reference-manifest.js": {
-      "bytes": 11074,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/app/(protected)/dashboard/page_client-reference-manifest.js": {
-      "bytes": 11040,
+    ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js": {
+      "bytes": 7968,
       "imports": [],
       "format": "cjs"
     },
@@ -3574,8 +3564,18 @@
       "imports": [],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/app/(protected)/dashboard/page_client-reference-manifest.js": {
+      "bytes": 11040,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/app/(protected)/bookings/page_client-reference-manifest.js": {
       "bytes": 11393,
+      "imports": [],
+      "format": "cjs"
+    },
+    ".open-next/server-functions/default/.next/server/app/(protected)/gemstones/page_client-reference-manifest.js": {
+      "bytes": 11074,
       "imports": [],
       "format": "cjs"
     },
@@ -3633,24 +3633,14 @@
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\onboarding\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\home\\page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/login/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\login\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(protected)/gemstones/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\gemstones\\page_client-reference-manifest.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/app/(protected)/dashboard/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\dashboard\\page_client-reference-manifest.js"
+          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\home\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(protected)/profile/page_client-reference-manifest.js",
@@ -3658,9 +3648,19 @@
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\profile\\page_client-reference-manifest.js"
         },
         {
+          "path": ".open-next/server-functions/default/.next/server/app/(protected)/dashboard/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\dashboard\\page_client-reference-manifest.js"
+        },
+        {
           "path": ".open-next/server-functions/default/.next/server/app/(protected)/bookings/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\bookings\\page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/(protected)/gemstones/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\gemstones\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/(protected)/book/page_client-reference-manifest.js",
@@ -4687,19 +4687,14 @@
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/seed/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\seed\\page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/_not-found/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\_not-found\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js",
+          "path": ".open-next/server-functions/default/.next/server/app/seed/page_client-reference-manifest.js",
           "kind": "require-call",
-          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\onboarding\\page_client-reference-manifest.js"
+          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\seed\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/_global-error/page_client-reference-manifest.js",
@@ -4710,6 +4705,11 @@
           "path": ".open-next/server-functions/default/.next/server/app/login/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\login\\page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\onboarding\\page_client-reference-manifest.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js",
@@ -4732,14 +4732,14 @@
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\dashboard\\page_client-reference-manifest.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/app/(protected)/bookings/page_client-reference-manifest.js",
-          "kind": "require-call",
-          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\bookings\\page_client-reference-manifest.js"
-        },
-        {
           "path": ".open-next/server-functions/default/.next/server/app/(protected)/book/page_client-reference-manifest.js",
           "kind": "require-call",
           "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\book\\page_client-reference-manifest.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/app/(protected)/bookings/page_client-reference-manifest.js",
+          "kind": "require-call",
+          "original": "D:\\astro\\astro-app\\.open-next\\server-functions\\default\\.next\\server\\app\\(protected)\\bookings\\page_client-reference-manifest.js"
         }
       ],
       "format": "cjs"
@@ -8417,23 +8417,23 @@
         ".open-next/server-functions/default/.next/server/app/onboarding/page_client-reference-manifest.js": {
           "bytesInOutput": 7619
         },
-        ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js": {
-          "bytesInOutput": 7588
-        },
         ".open-next/server-functions/default/.next/server/app/login/page_client-reference-manifest.js": {
           "bytesInOutput": 7538
         },
-        ".open-next/server-functions/default/.next/server/app/(protected)/gemstones/page_client-reference-manifest.js": {
-          "bytesInOutput": 10587
+        ".open-next/server-functions/default/.next/server/app/home/page_client-reference-manifest.js": {
+          "bytesInOutput": 7588
+        },
+        ".open-next/server-functions/default/.next/server/app/(protected)/profile/page_client-reference-manifest.js": {
+          "bytesInOutput": 10540
         },
         ".open-next/server-functions/default/.next/server/app/(protected)/dashboard/page_client-reference-manifest.js": {
           "bytesInOutput": 10553
         },
-        ".open-next/server-functions/default/.next/server/app/(protected)/profile/page_client-reference-manifest.js": {
-          "bytesInOutput": 10541
-        },
         ".open-next/server-functions/default/.next/server/app/(protected)/bookings/page_client-reference-manifest.js": {
           "bytesInOutput": 10906
+        },
+        ".open-next/server-functions/default/.next/server/app/(protected)/gemstones/page_client-reference-manifest.js": {
+          "bytesInOutput": 10588
         },
         ".open-next/server-functions/default/.next/server/app/(protected)/book/page_client-reference-manifest.js": {
           "bytesInOutput": 10879

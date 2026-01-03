@@ -5,6 +5,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  serverComponentsExternalPackages: ['@vercel/og', 'sharp'],
+  experimental: {
+    serverComponentsExternalPackages: ['@vercel/og', 'sharp'],
+  },
 };
 
 export default nextConfig;

@@ -6,15 +6,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-import { SERVICES_DATA } from "@/data/services";
+// Removed static SERVICES_DATA import
 
 export function ServiceSelection({
+    servicesData,
+    loading,
     selectedCategory,
     handleCategoryChange,
     selectedService,
     handleServiceSelect,
     onNext
 }) {
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="size-8 border-2 border-primary-gold border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+
+    const categories = Object.values(servicesData || {});
+
     return (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-5xl mx-auto pb-40 md:pb-0">
             <Tabs
@@ -25,7 +37,7 @@ export function ServiceSelection({
             >
                 {/* Tabs Navigation */}
                 <TabsList className="bg-black/50 border border-white/10 p-1.5 rounded-full h-auto gap-2 mb-8 sticky top-4 z-30 backdrop-blur-xl shadow-2xl flex-wrap justify-center">
-                    {Object.values(SERVICES_DATA).map((cat) => (
+                    {categories.map((cat) => (
                         <TabsTrigger
                             key={cat.id}
                             value={cat.id}
@@ -37,7 +49,7 @@ export function ServiceSelection({
                 </TabsList>
 
                 {/* Service Cards Grid - Scrollable Container */}
-                {Object.values(SERVICES_DATA).map((cat) => (
+                {categories.map((cat) => (
                     <TabsContent key={cat.id} value={cat.id} className="w-full">
                         <RadioGroup
                             value={selectedService?.id}

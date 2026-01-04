@@ -27,7 +27,8 @@ export function ServicesTab() {
     const [formData, setFormData] = useState({
         name: "",
         price: "",
-        description: ""
+        description: "",
+        paymentUrl: ""
     });
     const [formErrors, setFormErrors] = useState({});
     const [saving, setSaving] = useState(false);
@@ -110,6 +111,15 @@ export function ServicesTab() {
             errors.price = "Price must be less than ₹100,000";
         }
 
+        // Payment URL validation
+        if (!formData.paymentUrl || formData.paymentUrl.trim().length === 0) {
+            errors.paymentUrl = "Payment URL is required";
+        } else if (!formData.paymentUrl.startsWith("https://")) {
+            errors.paymentUrl = "Payment URL must start with https://";
+        } else if (!formData.paymentUrl.includes("payu.in")) {
+            errors.paymentUrl = "Payment URL must be a PayU link (payu.in)";
+        }
+
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -124,7 +134,8 @@ export function ServicesTab() {
             const serviceData = {
                 name: formData.name.trim(),
                 description: formData.description.trim(),
-                price: parseInt(formData.price)
+                price: parseInt(formData.price),
+                paymentUrl: formData.paymentUrl.trim()
             };
 
             if (editingService) {
@@ -134,7 +145,12 @@ export function ServicesTab() {
                 // Get current items
                 const currentServices = services.filter(s => s.categoryId === editingService.categoryId);
                 const updatedItems = currentServices.map((s, idx) =>
-                    idx === editingService.itemIndex ? serviceData : { name: s.name, description: s.description, price: s.price }
+                    idx === editingService.itemIndex ? serviceData : {
+                        name: s.name,
+                        description: s.description,
+                        price: s.price,
+                        paymentUrl: s.paymentUrl || ""
+                    }
                 );
 
                 await updateDoc(categoryRef, { items: updatedItems });
@@ -163,7 +179,8 @@ export function ServicesTab() {
         setFormData({
             name: service.name,
             price: service.price.toString(),
-            description: service.description
+            description: service.description,
+            paymentUrl: service.paymentUrl || ""
         });
         setFormErrors({});
         setIsDialogOpen(true);
@@ -183,7 +200,12 @@ export function ServicesTab() {
             const currentServices = services.filter(s => s.categoryId === deleteConfirm.categoryId);
             const updatedItems = currentServices
                 .filter((s, idx) => idx !== deleteConfirm.itemIndex)
-                .map(s => ({ name: s.name, description: s.description, price: s.price }));
+                .map(s => ({
+                    name: s.name,
+                    description: s.description,
+                    price: s.price,
+                    paymentUrl: s.paymentUrl || ""
+                }));
 
             await updateDoc(categoryRef, { items: updatedItems });
 
@@ -199,7 +221,8 @@ export function ServicesTab() {
         setFormData({
             name: "",
             price: "",
-            description: ""
+            description: "",
+            paymentUrl: ""
         });
         setFormErrors({});
         setEditingService(null);
@@ -348,6 +371,17 @@ export function ServicesTab() {
                                 className="bg-white/5 border-white/10 text-white"
                             />
                             {formErrors.price && <p className="text-red-400 text-xs mt-1">{formErrors.price}</p>}
+                        </div>
+                        <div>
+                            <label className="text-sm text-white/80 mb-1 block">PayU Payment URL *</label>
+                            <Input
+                                value={formData.paymentUrl}
+                                onChange={(e) => setFormData({ ...formData, paymentUrl: e.target.value })}
+                                placeholder="https://dashboard-staging.payu.in/web/..."
+                                className="bg-white/5 border-white/10 text-white"
+                            />
+                            {formErrors.paymentUrl && <p className="text-red-400 text-xs mt-1">{formErrors.paymentUrl}</p>}
+                            <p className="text-xs text-white/40 mt-1">PayU payment link for this service</p>
                         </div>
                         <DialogFooter>
                             <Button

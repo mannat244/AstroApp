@@ -18,7 +18,7 @@ import { DateTimeSelection } from "./components/DateTimeSelection";
 import { PaymentSummary } from "./components/PaymentSummary";
 import { BookingSuccess } from "./components/BookingSuccess";
 
-import { SERVICES_DATA } from "@/data/services";
+// Removed static SERVICES_DATA import
 
 export default function BookPage() {
     const { user } = useAuth();
@@ -37,6 +37,8 @@ export default function BookPage() {
     const [time, setTime] = useState("");
     const [bookedSlots, setBookedSlots] = useState([]); // Fetched from DB
     const [selectedService, setSelectedService] = useState(null); // Full service object
+    const [servicesData, setServicesData] = useState({}); // Dynamic services from Firestore
+    const [servicesLoading, setServicesLoading] = useState(true);
 
     // Smart Form Details
     const [beneficiary, setBeneficiary] = useState("self"); // self | other
@@ -86,22 +88,55 @@ export default function BookPage() {
         fetchBookedSlots();
     }, [date]);
 
-    // Handle URL Params on Mount
+
+
+    // Fetch Services from Firestore
     useEffect(() => {
-        const paramCategory = searchParams.get('category');
-        const paramService = searchParams.get('service');
+        const fetchServices = async () => {
+            try {
+                const snapshot = await getDocs(collection(db, "service_categories"));
+                const data = {};
+                snapshot.docs.forEach(doc => {
+                    const categoryData = doc.data();
+                    data[doc.id] = {
+                        id: doc.id,
+                        ...categoryData,
+                        items: (categoryData.items || []).map((item, index) => ({
+                            ...item,
+                            // Ensure ID exists (fallback to name slug or index)
+                            id: item.id || (item.name ? item.name.toLowerCase().replace(/\s+/g, '-') : `item-${index}`),
+                            // Ensure originalPrice exists to avoid NaN (fallback to price)
+                            originalPrice: item.originalPrice || item.price
+                        }))
+                    };
+                });
+                setServicesData(data);
 
-        if (paramCategory && SERVICES_DATA[paramCategory]) {
-            setSelectedCategory(paramCategory);
+                // Handle URL Params after data is loaded
+                const paramCategory = searchParams.get('category');
+                const paramService = searchParams.get('service');
+                const availableCategories = Object.keys(data);
 
-            if (paramService) {
-                const svc = SERVICES_DATA[paramCategory].items.find(i => i.name === paramService);
-                if (svc) {
-                    setSelectedService({ ...svc, categoryId: paramCategory });
+                if (paramCategory && data[paramCategory]) {
+                    setSelectedCategory(paramCategory);
+                    if (paramService) {
+                        const svc = data[paramCategory].items.find(i => i.name === paramService);
+                        if (svc) {
+                            setSelectedService({ ...svc, categoryId: paramCategory });
+                        }
+                    }
+                } else if (availableCategories.length > 0 && !data[selectedCategory]) {
+                    // Default to first category if current (e.g. kundali) is invalid
+                    setSelectedCategory(availableCategories[0]);
                 }
+            } catch (err) {
+                console.error("Error fetching services:", err);
+            } finally {
+                setServicesLoading(false);
             }
-        }
-    }, [searchParams]);
+        };
+        fetchServices();
+    }, [searchParams]); // Rerun if params change (though mostly for initial load)
 
     // Pre-fill Self Data
     useEffect(() => {
@@ -116,15 +151,16 @@ export default function BookPage() {
     }, [beneficiary, user]);
 
     // Handlers
+    // Handlers
     const handleCategoryChange = (val) => {
         setSelectedCategory(val);
     };
 
     const handleServiceSelect = (serviceId) => {
-        const catData = SERVICES_DATA[selectedCategory];
-        const svc = catData.items.find(i => i.id === serviceId);
-        if (svc) {
-            setSelectedService({ ...svc, categoryId: selectedCategory });
+        const catData = servicesData[selectedCategory];
+        const service = catData?.items.find(s => s.id === serviceId);
+        if (service) {
+            setSelectedService({ ...service, categoryId: selectedCategory });
         }
     };
 
@@ -181,9 +217,20 @@ export default function BookPage() {
                 if (sfDoc.exists()) {
                     const data = sfDoc.data();
                     // If slot exists, check if it's "real" or just a stale abandoned initiation
-                    // For now, strictly block any existing confirmed/initiated slot
-                    if (data.status === "confirmed" || data.status === "initiated") {
+                    if (data.status === "confirmed") {
                         throw new Error("SLOT_TAKEN");
+                    }
+
+                    if (data.status === "initiated") {
+                        // Check if it's stale (> 15 minutes)
+                        const createdAt = new Date(data.createdAt).getTime();
+                        const now = new Date().getTime();
+                        const diffMinutes = (now - createdAt) / 1000 / 60;
+
+                        if (diffMinutes < 15) {
+                            throw new Error("SLOT_TAKEN"); // Still valid lock
+                        }
+                        // If > 15 mins, we overwrite (auto-release)
                     }
                 }
 
@@ -214,26 +261,63 @@ export default function BookPage() {
                 transaction.set(bookingRef, bookingData);
             });
 
-            // 2. Process Payment (Mock)
-            await new Promise(resolve => setTimeout(resolve, 2000)); // 2s simulated delay
-
-            // 3. Confirm Booking
-            await updateDoc(bookingRef, {
-                status: "confirmed",
-                paymentId: "PAY_" + Math.random().toString(36).substr(2, 9).toUpperCase()
+            // 2. PayU Payment Redirect
+            // Fetch Hash
+            const hashRes = await fetch('/api/payu/hash', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    txnid: slotId,
+                    amount: selectedService.price.toFixed(2),
+                    productinfo: selectedService.name,
+                    firstname: user.displayName?.split(" ")[0] || "User",
+                    email: user.email
+                })
             });
 
-            // Re-construct critical UI data for the success page
-            setBookingDetails({
-                id: slotId,
-                serviceName: selectedService.name,
-                meetingLink: meetingLink, // Use the meetingLink generated earlier
-                status: "confirmed",
-                date: date.toISOString(),
-                time: time,
+            const { hash, key } = await hashRes.json();
+
+            if (!hash) {
+                throw new Error("Failed to generate payment hash");
+            }
+
+            // Create and Submit Form
+            const payuBaseUrl = process.env.NEXT_PUBLIC_PAYU_BASE_URL || "https://test.payu.in/_payment";
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = payuBaseUrl;
+
+            // Success/Failure URLs (Absolute Paths Required)
+            const baseUrl = window.location.origin;
+            const surl = `${baseUrl}/payment/success?txnid=${slotId}`;
+            const furl = `${baseUrl}/payment/failure?txnid=${slotId}`;
+
+            const params = {
+                key,
+                txnid: slotId,
+                amount: selectedService.price.toFixed(2),
+                productinfo: selectedService.name,
+                firstname: user.displayName?.split(" ")[0] || "User",
+                email: user.email,
+                phone: formData.phone || "9999999999", // Fallback if phone not in auth
+                surl,
+                furl,
+                hash
+            };
+
+            Object.entries(params).forEach(([k, v]) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = k;
+                input.value = v;
+                form.appendChild(input);
             });
 
-            setStep(5);
+            document.body.appendChild(form);
+            form.submit();
+
+            // Note: Booking status remains 'initiated'. 
+            // Successful payment via SURL/Webhook will update it to 'confirmed'.
 
         } catch (error) {
             console.error("Booking failed:", error);
@@ -303,6 +387,8 @@ export default function BookPage() {
             {/* Step 1: Service Selection */}
             {step === 1 && (
                 <ServiceSelection
+                    servicesData={servicesData}
+                    loading={servicesLoading}
                     selectedCategory={selectedCategory}
                     handleCategoryChange={handleCategoryChange}
                     selectedService={selectedService}

@@ -1,0 +1,1 @@
+Amount,InvoiceID,MerchantReferenceID,ProductDescription,CustomerName,CustomerEmail,CustomerPhone,ValidationPeriod,TimeUnit,SendSms,SendEmail,IsPartialPaymentAllowed,CustomerAddress1,CustomerAddress2,CustomerCity,CustomerState,CustomerCountry,CustomerZipCode,udf1,udf2,udf3,udf4,udf5,userToken

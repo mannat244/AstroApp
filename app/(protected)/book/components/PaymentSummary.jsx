@@ -82,6 +82,27 @@ export function PaymentSummary({
                         <span className="text-xl font-bold text-primary-gold">₹{selectedService.price}</span>
                     </div>
 
+                    {/* Legacy Payment Link Logic (Hidden but preserved) */}
+                    {/* {selectedService.paymentUrl ? (
+                        <a
+                            href={selectedService.paymentUrl}
+                            style={{
+                                width: "135px",
+                                backgroundColor: "#E19100",
+                                textAlign: "center",
+                                fontWeight: "800",
+                                padding: "11px 0px",
+                                color: "white",
+                                fontSize: "12px",
+                                display: "inline-block",
+                                textDecoration: "none",
+                                borderRadius: "3.229px"
+                            }}
+                            className="ml-auto md:ml-0 md:w-full md:max-w-xs hover:opacity-90 transition-opacity"
+                        >
+                            Book Now
+                        </a>
+                    ) : ( */}
                     <Button
                         onClick={handlePayment}
                         disabled={loading}
@@ -94,6 +115,7 @@ export function PaymentSummary({
                             </div>
                         ) : "Pay & Book"}
                     </Button>
+                    {/* )} */}
                 </div>
             </div>
         </div>

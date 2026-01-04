@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { sanitizeOnboardingData } from "@/lib/sanitize";
+import { rateLimiters } from "@/lib/rateLimit";
 
 export default function OnboardingPage() {
     const { user, userProfile, loading } = useAuth();
@@ -28,7 +29,7 @@ export default function OnboardingPage() {
     useEffect(() => {
         if (!loading) {
             if (!user) {
-                router.push("/");
+                router.push("/login");
             } else if (userProfile?.onboarded) {
                 router.push("/dashboard");
             }
@@ -42,6 +43,20 @@ export default function OnboardingPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Check rate limit
+        const rateCheck = rateLimiters.formSubmit.checkLimit();
+        if (!rateCheck.allowed) {
+            alert(`Too many submission attempts. Please wait ${rateCheck.waitTime} seconds before trying again.`);
+            return;
+        }
+
+        // Record the attempt
+        if (!rateLimiters.formSubmit.attempt()) {
+            alert("Rate limit exceeded. Please try again later.");
+            return;
+        }
+
         setIsLoading(true);
 
         try {
@@ -56,7 +71,6 @@ export default function OnboardingPage() {
             });
             // Router will redirect via useEffect when userProfile updates
         } catch (error) {
-            console.error("Error updating profile:", error);
             alert("Failed to save profile. Please try again.");
         } finally {
             setIsLoading(false);

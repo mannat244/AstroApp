@@ -13,7 +13,7 @@ export default function ProtectedLayout({ children }) {
     useEffect(() => {
         if (!loading) {
             if (!user) {
-                router.push("/");
+                router.push("/login");
             } else if (!userProfile?.onboarded) {
                 router.push("/onboarding");
             }

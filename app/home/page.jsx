@@ -72,7 +72,7 @@ export default function HomePage() {
 
                         <div className="flex flex-col md:flex-row gap-4 pt-4">
                             <Button
-                                onClick={() => router.push("/dashboard")}
+                                onClick={() => router.push("/login")}
                                 className="h-14 px-8 bg-primary-gold text-black text-lg font-bold rounded-full shadow-lg shadow-primary-gold/20 hover:bg-white hover:scale-105 transition-all"
                             >
                                 Book Consultation
@@ -206,7 +206,7 @@ export default function HomePage() {
                 <section className="py-20 px-6 text-center bg-gradient-to-t from-primary-gold/10 to-transparent">
                     <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to change your destiny?</h2>
                     <Button
-                        onClick={() => router.push("/dashboard")}
+                        onClick={() => router.push("/login")}
                         className="h-16 px-10 bg-primary-gold text-black text-xl font-bold rounded-full shadow-[0_0_40px_rgba(212,175,55,0.3)] hover:bg-white hover:scale-105 transition-all"
                     >
                         Start Your Journey

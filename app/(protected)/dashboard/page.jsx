@@ -7,6 +7,13 @@ import { useEffect, useState } from "react";
 
 import { ServiceCard } from "@/components/service-card";
 import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
     Sparkles,
     Briefcase,
     Video,
@@ -38,7 +45,7 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push("/");
+            router.push("/login");
         }
     }, [user, loading, router]);
 
@@ -82,6 +89,55 @@ export default function DashboardPage() {
                     </div>
                 </div>
             </header>
+
+            {/* Image Carousel */}
+            <section className="mb-12">
+                <Carousel className="w-full max-w-2xl mx-auto">
+                    <CarouselContent>
+                        <CarouselItem>
+                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-primary-gold/20">
+                                <img
+                                    src="/vinnay-raaj-profile.png"
+                                    alt="Vinnay Raj - Astrology Expert"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent py-8 px-6 pt-16">
+                                    <h3 className="text-white text-xl font-bold">Expert Astrologer</h3>
+                                    <p className="text-white/70 text-sm">Vinnay Raj - Your Guide to the Stars</p>
+                                </div>
+                            </div>
+                        </CarouselItem>
+                        <CarouselItem>
+                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-primary-gold/20">
+                                <img
+                                    src="/vinnay.png"
+                                    alt="Vinnay Raj - Vedic Astrology"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent py-8 px-6 pt-16">
+                                    <h3 className="text-white text-xl font-bold">Vedic Wisdom</h3>
+                                    <p className="text-white/70 text-sm">Ancient Knowledge, Modern Solutions</p>
+                                </div>
+                            </div>
+                        </CarouselItem>
+                        <CarouselItem>
+                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-primary-gold/20">
+                                <img
+                                    src="/book.png"
+                                    alt="Vinnay Raj - Professional Consultation"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent py-8 px-6 pt-16">
+                                    <h3 className="text-white text-xl font-bold">Professional Guidance</h3>
+                                    <p className="text-white/70 text-sm">Personalized Consultations</p>
+                                </div>
+                            </div>
+                        </CarouselItem>
+                    </CarouselContent>
+                    <CarouselPrevious className="-left-4 md:-left-12" />
+                    <CarouselNext className="-right-4 md:-right-12" />
+                </Carousel>
+            </section>
 
             {/* Quick Services Grid */}
             <section className="mb-12">

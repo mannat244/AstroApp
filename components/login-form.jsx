@@ -6,6 +6,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
+import { rateLimiters } from "@/lib/rateLimit";
 
 export function LoginForm({
   className,
@@ -15,14 +16,26 @@ export function LoginForm({
   const [error, setError] = useState(null);
 
   const handleGoogleLogin = async () => {
+    // Check rate limit
+    const rateCheck = rateLimiters.login.checkLimit();
+    if (!rateCheck.allowed) {
+      setError(`Too many login attempts. Please wait ${Math.ceil(rateCheck.waitTime / 60)} minutes before trying again.`);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     const provider = new GoogleAuthProvider();
+
     try {
+      // Record the attempt
+      if (!rateLimiters.login.attempt()) {
+        setError("Rate limit exceeded. Please try again later.");
+        return;
+      }
+
       const result = await signInWithPopup(auth, provider);
-      // The signed-in user info.
       const user = result.user;
-      console.log("User signed in:", user);
 
       // Save user to Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -30,14 +43,11 @@ export function LoginForm({
         email: user.email,
         photo: user.photoURL,
         role: "user",
-        createdAt: new Date().toISOString(), // Use string for better compatibility
+        createdAt: new Date().toISOString(),
       }, { merge: true });
 
-      console.log("User saved to Firestore");
-
     } catch (error) {
-      console.error("Error signing in with Google:", error);
-      setError(error.message);
+      setError(error.message || "Failed to sign in. Please try again.");
     } finally {
       setIsLoading(false);
     }

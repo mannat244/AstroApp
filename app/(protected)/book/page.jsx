@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sanitizeBookingDetails } from "@/lib/sanitize";
+import { rateLimiters } from "@/lib/rateLimit";
 
 // Components
 import { ServiceSelection } from "./components/ServiceSelection";
@@ -139,6 +140,19 @@ export default function BookPage() {
     const handlePayment = async () => {
         if (!user) {
             alert("Please login to book.");
+            return;
+        }
+
+        // Check rate limit
+        const rateCheck = rateLimiters.booking.checkLimit();
+        if (!rateCheck.allowed) {
+            alert(`Too many booking attempts. Please wait ${rateCheck.waitTime} seconds before trying again.`);
+            return;
+        }
+
+        // Record the attempt
+        if (!rateLimiters.booking.attempt()) {
+            alert("Rate limit exceeded. Please try again later.");
             return;
         }
 

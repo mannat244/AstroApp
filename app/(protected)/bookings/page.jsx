@@ -20,7 +20,7 @@ export default function BookingsPage() {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push("/");
+            router.push("/login");
             return;
         }
 

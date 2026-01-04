@@ -10,6 +10,7 @@ import { Sparkles, LogOut, Mail, User as UserIcon, MapPin, Calendar, Phone, Edit
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { rateLimiters } from "@/lib/rateLimit";
 
 export default function ProfilePage() {
     const { user, userProfile, loading } = useAuth();
@@ -29,7 +30,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push("/");
+            router.push("/login");
         }
         if (userProfile) {
             setFormData({
@@ -46,7 +47,7 @@ export default function ProfilePage() {
         setIsSigningOut(true);
         try {
             await signOut(auth);
-            router.push("/");
+            router.push("/login");
         } catch (error) {
             console.error("Error signing out:", error);
         } finally {
@@ -55,6 +56,19 @@ export default function ProfilePage() {
     };
 
     const handleSave = async () => {
+        // Check rate limit
+        const rateCheck = rateLimiters.profileUpdate.checkLimit();
+        if (!rateCheck.allowed) {
+            alert(`Too many update attempts. Please wait ${Math.ceil(rateCheck.waitTime / 60)} minutes before trying again.`);
+            return;
+        }
+
+        // Record the attempt
+        if (!rateLimiters.profileUpdate.attempt()) {
+            alert("Rate limit exceeded. Please try again later.");
+            return;
+        }
+
         setIsSaving(true);
         try {
             const userRef = doc(db, "users", user.uid);
@@ -64,8 +78,7 @@ export default function ProfilePage() {
             });
             setIsEditing(false);
         } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("Failed to save. Try again.");
+            alert("Failed to save profile. Please try again.");
         } finally {
             setIsSaving(false);
         }
